@@ -18,18 +18,22 @@ from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from . import views
 from . import auth_views
+from tweet import views as tweet_views
 
 
 urlpatterns = [
     
     path('admin/', admin.site.urls),
-    path('', auth_views.login_view, name='login'),
+    path('', tweet_views.index, name='index'),
     path('register/', auth_views.register_view, name='register'),
     path('login/', auth_views.login_view, name='login'),
     path('logout/', auth_views.logout_view, name='logout'),
     path('tweet/', include('tweet.urls')),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico', permanent=True)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

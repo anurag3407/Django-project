@@ -3,6 +3,7 @@ from .models import Tweet
 from .forms import TweetForm
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 def index(request):
     tweets = Tweet.objects.all().order_by('-created_at')
@@ -12,6 +13,22 @@ def index(request):
 def tweet_list(request):
     tweets = Tweet.objects.all().order_by('-created_at')
     return render(request, 'tweet_list.html', {'tweets': tweets})
+
+def tweet_search(request):
+    query = request.GET.get('q', '')
+    tweets = Tweet.objects.all().order_by('-created_at')
+    
+    if query:
+        tweets = tweets.filter(
+            Q(content__icontains=query) | 
+            Q(user__username__icontains=query)
+        )
+    
+    context = {
+        'tweets': tweets,
+        'query': query,
+    }
+    return render(request, 'tweet_search.html', context)
 
 @login_required
 def tweet_create ( request ):
