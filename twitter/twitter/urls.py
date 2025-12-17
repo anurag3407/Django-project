@@ -20,11 +20,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
+from . import auth_views
 
 
 urlpatterns = [
     
     path('admin/', admin.site.urls),
+    path('', auth_views.login_view, name='login'),
+    path('register/', auth_views.register_view, name='register'),
+    path('login/', auth_views.login_view, name='login'),
+    path('logout/', auth_views.logout_view, name='logout'),
     path('tweet/', include('tweet.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
